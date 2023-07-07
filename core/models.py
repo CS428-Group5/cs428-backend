@@ -12,3 +12,4 @@ class User(AbstractUser):
     gender = models.IntegerField(choices=Gender.choices, null=True, blank=True)
     current_title = models.CharField(max_length=255, null=True, blank=True)
     about_me = models.TextField(null=True, blank=True)
+    is_mentor = models.BooleanField(default=False)
