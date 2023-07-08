@@ -11,13 +11,16 @@ class Expertise(models.Model):
 class Mentor(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     current_company = models.CharField(max_length=255, null=True, blank=True)
-    default_session_price = models.DecimalField()
+    default_session_price = models.DecimalField(
+        max_digits=13, decimal_places=4, null=True, blank=True
+    )
     experience = models.IntegerField()
     experise = models.ForeignKey(Expertise, on_delete=models.CASCADE)
 
 
 class Mentee(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
+    favorites = models.ManyToManyField(Mentor, related_name="favorites")
 
 
 @receiver(post_save, sender=User)
