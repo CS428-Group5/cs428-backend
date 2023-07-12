@@ -15,7 +15,7 @@ class Mentor(models.Model):
         max_digits=13, decimal_places=4, null=True, blank=True
     )
     experience = models.IntegerField()
-    experise = models.ForeignKey(Expertise, on_delete=models.CASCADE)
+    expertise = models.ForeignKey(Expertise, on_delete=models.CASCADE)
 
 
 class Mentee(models.Model):
@@ -23,18 +23,18 @@ class Mentee(models.Model):
     favorites = models.ManyToManyField(Mentor, related_name="favorites")
 
 
-@receiver(post_save, sender=User)
-def create_new_user(sender, instance, created, **kwargs):
-    if created:
-        if instance.is_mentor:
-            Mentor.objects.create(user=instance)
-        else:
-            Mentee.objects.create(user=instance)
+# @receiver(post_save, sender=User)
+# def create_new_user(sender, instance, created, **kwargs):
+#     if created:
+#         if instance.is_mentor:
+#             Mentor.objects.create(user=instance)
+#         else:
+#             Mentee.objects.create(user=instance)
 
 
-@receiver(post_save, sender=User)
-def save_user(sender, instance, **kwargs):
-    if instance.is_mentor:
-        instance.mentor.save()
-    else:
-        instance.mentee.save()
+# @receiver(post_save, sender=User)
+# def save_user(sender, instance, **kwargs):
+#     if instance.is_mentor:
+#         instance.mentor.save()
+#     else:
+#         instance.mentee.save()
