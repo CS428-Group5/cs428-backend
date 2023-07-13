@@ -15,7 +15,7 @@ class Mentor(models.Model):
         max_digits=13, decimal_places=4, null=True, blank=True
     )
     experience = models.IntegerField(null=True)
-    experise = models.ForeignKey(Expertise, on_delete=models.CASCADE)
+    expertise = models.ForeignKey(Expertise, null=True, on_delete=models.CASCADE)
 
 
 class Mentee(models.Model):
