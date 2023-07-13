@@ -76,7 +76,7 @@ def login(request, username: str = Form(...), password: str = Form(...)):
         request.session['token'] = token
         return HttpResponse("Succesfully login", status=200)
     except ObjectDoesNotExist:
-        return HttpResponse(content="Invalid Username or Password", status=403)
+        return HttpResponse(content="Invalid Username or Password", status=401)
     
 @authenticate_router.get("/cookie-acceptance")
 def cookie_acceptance(request):
@@ -84,7 +84,7 @@ def cookie_acceptance(request):
         return HttpResponse("Client Accept Cookie", status=200)
     else:
         request.session.set_test_cookie()
-        return HttpResponse("Client Not Accept Cookie", status=302)
+        return HttpResponse("Client Not Accept Cookie", status=400)
 
 @authenticate_router.get("/logout")
 def logout(request):
