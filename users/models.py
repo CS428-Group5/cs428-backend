@@ -14,8 +14,8 @@ class Mentor(models.Model):
     default_session_price = models.DecimalField(
         max_digits=13, decimal_places=4, null=True, blank=True
     )
-    experience = models.IntegerField()
-    experise = models.ForeignKey(Expertise, on_delete=models.CASCADE)
+    experience = models.IntegerField(null=True)
+    expertise = models.ForeignKey(Expertise, null=True, on_delete=models.CASCADE)
 
 
 class Mentee(models.Model):
