@@ -34,6 +34,9 @@ class Mentee(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     favorites = models.ManyToManyField(Mentor, related_name="favorites", blank=True)
 
+    def __str__(self) -> str:
+        return self.user.username
+
 
 @receiver(post_save, sender=User)
 def create_new_user(sender, instance, created, **kwargs):

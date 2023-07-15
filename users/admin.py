@@ -6,6 +6,10 @@ class MentorAdmin(admin.ModelAdmin):
     readonly_fields = ("id",)
 
 
+class MenteeAdmin(admin.ModelAdmin):
+    readonly_fields = ("id",)
+
+
 # Register your models here.
 admin.site.register(Expertise)
 admin.site.register(Mentor, MentorAdmin)
