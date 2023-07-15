@@ -59,8 +59,8 @@ def save_user(sender, instance, **kwargs):
 
 
 class Review(models.Model):
-    mentee_id = models.ForeignKey(Mentee, on_delete=models.CASCADE)
-    mentor_id = models.ForeignKey(Mentor, on_delete=models.CASCADE)
+    mentee = models.ForeignKey(Mentee, on_delete=models.CASCADE)
+    mentor = models.ForeignKey(Mentor, on_delete=models.CASCADE)
     content = models.TextField(null=True, blank=True)
     rating = models.IntegerField(
         default=1, validators=[MinValueValidator(1), MaxValueValidator(5)]

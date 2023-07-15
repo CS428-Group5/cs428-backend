@@ -13,5 +13,5 @@ class MenteeAdmin(admin.ModelAdmin):
 # Register your models here.
 admin.site.register(Expertise)
 admin.site.register(Mentor, MentorAdmin)
-admin.site.register(Mentee)
+admin.site.register(Mentee, MenteeAdmin)
 admin.site.register(Review)

@@ -1,5 +1,5 @@
 from ninja import ModelSchema, Field, Schema
-from .models import Mentor, Mentee
+from .models import Mentor, Mentee, Review
 from core.models import User
 
 """
@@ -37,6 +37,16 @@ class MentorDetailOutSchema(ModelSchema):
 
 class FavoriteInSchema(Schema):
     mentor_id: int
+
+
+class ReviewItemSchema(ModelSchema):
+    firstname: str = Field(..., max_length=255, alias="mentee.user.first_name")
+    lastname: str = Field(..., max_length=255, alias="mentee.user.last_name")
+    avatar: str | None = Field(..., max_length=255, alias="mentee.user.avatar")
+
+    class Config:
+        model = Review
+        model_fields = ["id", "content", "rating"]
 
 
 """
