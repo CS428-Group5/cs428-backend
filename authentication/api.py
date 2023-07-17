@@ -5,8 +5,8 @@ from users.models import User, Expertise
 from .helpers import create_token, cookie_key
 
 from django.core.exceptions import ObjectDoesNotExist
-from django.http.response import HttpResponse
-
+from django.http.response import HttpResponse, JsonResponse
+from django.middleware.csrf import get_token
 
 authenticate_router = Router()
 
@@ -91,6 +91,11 @@ def logout(request):
     if 'token' in request.session:
         del request.session['token']
     return HttpResponse("Successfully Logout", status=200)
+
+@authenticate_router.get("/get-csrf-token")
+def get_csrf_token(request):
+    csrf_token = get_token(request)
+    return JsonResponse({"csrf_token": csrf_token})
 
 @authenticate_router.post("/password_change", auth=cookie_key)
 def password_change(request, username: str = Form(...), old_password: str = Form(...), new_password: str = Form(...)):
