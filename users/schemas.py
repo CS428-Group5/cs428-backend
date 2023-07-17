@@ -1,5 +1,5 @@
 from ninja import ModelSchema, Field, Schema
-from .models import Mentor, Mentee, Review
+from .models import Mentor, Mentee, Review, Expertise
 from core.models import User
 
 """
@@ -86,3 +86,14 @@ class MentorOutSchema(ModelSchema):
             "current_company",
             "default_session_price",
         ]
+
+
+"""
+Other Schemas
+"""
+
+
+class ExpertiseSchema(ModelSchema):
+    class Config:
+        model = Expertise
+        model_fields = "__all__"
