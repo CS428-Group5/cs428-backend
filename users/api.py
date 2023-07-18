@@ -39,7 +39,7 @@ class MentorFilterSchema(Schema):
     price_from: int | None = None
     price_to: Optional[int] = None
     expertise: List[str] | None = None
-    experience: Experience | None = None
+    experience: List[Experience] | None = None
 
 
 @mentor_router.get("/", response=List[MentorItemOutSchema])
@@ -53,12 +53,15 @@ def get_mentors(
         mentors = mentors.filter(expertise__expertise_name__in=filters.expertise)
 
     if filters.experience is not None:
-        if filters.experience == Experience.SHORT:
-            mentors = mentors.filter(experience__lte=2)
-        elif filters.experience == Experience.MEDIUM:
-            mentors = mentors.filter(experience__range=[3, 5])
-        else:
-            mentors = mentors.filter(experience__gte=5)
+        query = Q()
+        if Experience.SHORT in filters.experience:
+            query |= Q(experience__lte=2)
+        if Experience.MEDIUM in filters.experience:
+            query |= Q(experience__range=[3, 5])
+        if Experience.LONG in filters.experience:
+            query |= Q(experience__gte=5)
+
+        mentors = mentors.filter(query)
 
     if filters.price_from is not None and filters.price_to is not None:
         mentors = mentors.filter(
