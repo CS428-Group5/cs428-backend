@@ -11,6 +11,7 @@ class MentorItemOutSchema(ModelSchema):
     firstname: str = Field(..., max_length=255, alias="user.first_name")
     lastname: str = Field(..., max_length=255, alias="user.last_name")
     current_title: str = Field(..., max_length=255, alias="user.current_title")
+    avatar: str | None = Field(..., max_length=255, alias="user.avatar")
     average_rating: float | None = None
 
     class Config:

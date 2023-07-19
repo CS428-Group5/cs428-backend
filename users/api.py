@@ -23,7 +23,7 @@ expertise_router = Router()
 
 
 class Experience(Enum):
-    SHORT = "1-2 years"
+    SHORT = "1-3 years"
     MEDIUM = "3-5 years"
     LONG = ">5 years"
 
@@ -37,7 +37,7 @@ class MentorFilterSchema(Schema):
     limit: int = 100
     offset: int = 0
     price_from: int | None = None
-    price_to: Optional[int] = None
+    price_to: int | None = None
     expertise: List[str] | None = None
     experience: List[Experience] | None = None
 
@@ -48,6 +48,7 @@ def get_mentors(
     filters: MentorFilterSchema = Query(...),
 ):
     mentors = Mentor.objects.all()
+    print(filters.price_from)
 
     if filters.expertise is not None:
         mentors = mentors.filter(expertise__expertise_name__in=filters.expertise)
@@ -55,7 +56,7 @@ def get_mentors(
     if filters.experience is not None:
         query = Q()
         if Experience.SHORT in filters.experience:
-            query |= Q(experience__lte=2)
+            query |= Q(experience__lte=3)
         if Experience.MEDIUM in filters.experience:
             query |= Q(experience__range=[3, 5])
         if Experience.LONG in filters.experience:
