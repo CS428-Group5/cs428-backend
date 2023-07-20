@@ -22,7 +22,7 @@ steps:
         cd $cs428-backend
         git pull origin master
     fi" > init_script.sh'
-  gcloud compute ssh --zone $GCP_CE_ZONE $GCP_INSTANCE -- command "bash init_script.sh"
+    gcloud compute ssh --zone $GCP_CE_ZONE $GCP_INSTANCE -- command "bash init_script.sh"
 
 options:
   logging: GCS_ONLY
