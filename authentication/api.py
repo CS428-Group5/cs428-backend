@@ -77,7 +77,7 @@ def login(request, username: str = Form(...), password: str = Form(...)):
     try:
         user = User.objects.get(username=username, password=password)
         token = create_token(user.id, username)
-        request.session['token'] = token
+        request.session["token"] = token
         return HttpResponse("Succesfully login", status=200)
     except ObjectDoesNotExist:
         return HttpResponse(content="Invalid Username or Password", status=401)
@@ -94,8 +94,8 @@ def cookie_acceptance(request):
 
 @authenticate_router.get("/logout")
 def logout(request):
-    if 'token' in request.session:
-        del request.session['token']
+    if "token" in request.session:
+        del request.session["token"]
     return HttpResponse("Successfully Logout", status=200)
 
 
@@ -106,7 +106,12 @@ def get_csrf_token(request):
 
 
 @authenticate_router.post("/password_change", auth=cookie_key)
-def password_change(request, username: str = Form(...), old_password: str = Form(...), new_password: str = Form(...)):
+def password_change(
+    request,
+    username: str = Form(...),
+    old_password: str = Form(...),
+    new_password: str = Form(...),
+):
     session_user_id = request.auth
     session_user = User.objects.get(id=session_user_id)
     if session_user.username == username and session_user.password == old_password:
