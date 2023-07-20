@@ -13,7 +13,7 @@ steps:
     gcloud auth login --cred-file=cred_file
     gcloud compute ssh --zone $GCP_CE_ZONE $GCP_INSTANCE
     if [ -d $GIT_FOLDER ]; then
-        git clone https://source.developers.google.com/p/ecomercebackend-393408/r/cs428-backend
+        git clone -b quocnd/deploy_backend_gcp https://source.developers.google.com/p/ecomercebackend-393408/r/cs428-backend
         cd $GIT_FOLDER
         python -m venv .env
         source .env/bin/activate
