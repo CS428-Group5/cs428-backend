@@ -6,8 +6,10 @@ steps:
     - 'GCP_INSTANCE=instance-1'
     - 'GIT_FOLDER=cs428-backend'
     - 'GCP_CE_ZONE=us-central1-a'
+    - 'GCP_CRED=$_SECRET_GCP_CREDENTIAL'
   script: |
     #!/usr/bin/env bash
+    gcloud auth login --cred-file=$GCP_CRED
     gcloud compute ssh --zone $GCP_CE_ZONE $GCP_INSTANCE
     if [ -d $GIT_FOLDER ]; then
         gcloud source repos clone cs428-backend --project=ecomercebackend-393408
