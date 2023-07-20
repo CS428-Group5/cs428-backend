@@ -10,7 +10,7 @@ from .schemas import (
     ReviewItemSchema,
     ExpertiseSchema,
 )
-from typing import List, Optional
+from typing import List, Optional, Union
 from enum import Enum
 
 from django.shortcuts import get_object_or_404
@@ -36,10 +36,10 @@ Mentor API
 class MentorFilterSchema(Schema):
     limit: int = 100
     offset: int = 0
-    price_from: int | None = None
-    price_to: int | None = None
-    expertise: List[str] | None = None
-    experience: List[Experience] | None = None
+    price_from: Union[int, None] = None
+    price_to: Union[int, None] = None
+    expertise: Union[List[str], None] = None
+    experience: Union[List[Experience], None] = None
 
 
 @mentor_router.get("/", response=List[MentorItemOutSchema])
