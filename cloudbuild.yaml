@@ -11,9 +11,8 @@ steps:
     #!/usr/bin/env bash
     echo $GCP_CRED > cred_file
     gcloud auth login --cred-file=cred_file
-    gcloud compute ssh --zone $GCP_CE_ZONE $GCP_INSTANCE
+    gcloud compute ssh --zone $GCP_CE_ZONE $GCP_INSTANCE -- command "
     if [ ! -d $GIT_FOLDER ]; then
-        ls ~/.ssh/
         git clone git@github.com:CS428-Group5/cs428-backend.git
         cd $GIT_FOLDER
         python3 -m venv .env
@@ -24,7 +23,7 @@ steps:
     else
         cd $GIT_FOLDER
         git pull origin master
-    fi
+    fi"
     
 options:
   logging: GCS_ONLY
