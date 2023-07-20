@@ -1,0 +1,28 @@
+steps:
+- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+  env: 
+    - 'GCP_PROJECT=$PROJECT_ID'
+    - 'CLOUDSDK_CORE_PROJECT=$PROJECT_ID'
+    - 'GCP_INSTANCE=instance-1'
+    - 'GIT_FOLDER=cs428-backend'
+  scrips: |
+    #!/usr/bin/env bash
+    gcloud compute ssh $GCP_INSTANCE
+    if [ -d $GIT_FOLDER ]; then
+        gcloud source repos clone cs428-backend --project=ecomercebackend-393408
+        cd $GIT_FOLDER
+        python -m venv .env
+        source .env/bin/activate
+        pip install -r requirements.txt
+        python manage.py migrate
+        python manage.py runserver
+    else
+        cd $GIT_FOLDER
+        git pull origin master
+    fi
+    
+options:
+  logging: GCS_ONLY
+    
+    
+
