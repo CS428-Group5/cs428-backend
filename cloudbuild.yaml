@@ -8,7 +8,7 @@ steps:
     - 'GCP_CE_ZONE=us-central1-a'
   script: |
     #!/usr/bin/env bash
-    gcloud compute --zone $GCP_CE_ZONE ssh $GCP_INSTANCE
+    gcloud compute ssh --zone $GCP_CE_ZONE $GCP_INSTANCE
     if [ -d $GIT_FOLDER ]; then
         gcloud source repos clone cs428-backend --project=ecomercebackend-393408
         cd $GIT_FOLDER
