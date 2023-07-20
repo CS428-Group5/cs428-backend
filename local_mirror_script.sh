@@ -9,4 +9,4 @@ if ! git remote | grep -q 'google'; then
 else
     echo "The google git remote is already existed"
 fi
-git push --set-upstream google quocnd/deploy_backend_gcp
+git push --set-upstream google main:quocnd/deploy_backend_gcp
