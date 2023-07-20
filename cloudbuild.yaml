@@ -12,7 +12,7 @@ steps:
     echo $GCP_CRED > cred_file
     gcloud auth login --cred-file=cred_file
     gcloud compute ssh --zone $GCP_CE_ZONE $GCP_INSTANCE
-    if [ -d $GIT_FOLDER ]; then
+    if [ ! -d $GIT_FOLDER ]; then
         git clone git@github.com:CS428-Group5/cs428-backend.git
         cd $GIT_FOLDER
         python -m venv .env
