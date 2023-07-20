@@ -5,7 +5,7 @@ steps:
     - 'CLOUDSDK_CORE_PROJECT=$PROJECT_ID'
     - 'GCP_INSTANCE=instance-1'
     - 'GIT_FOLDER=cs428-backend'
-  scrip: |
+  script: |
     #!/usr/bin/env bash
     gcloud compute ssh $GCP_INSTANCE
     if [ -d $GIT_FOLDER ]; then
