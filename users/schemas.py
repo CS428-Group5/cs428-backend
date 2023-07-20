@@ -2,6 +2,8 @@ from ninja import ModelSchema, Field, Schema
 from .models import Mentor, Mentee, Review, Expertise
 from core.models import User
 
+from typing import Union
+
 """
 Mentor schemas
 """
@@ -11,8 +13,8 @@ class MentorItemOutSchema(ModelSchema):
     firstname: str = Field(..., max_length=255, alias="user.first_name")
     lastname: str = Field(..., max_length=255, alias="user.last_name")
     current_title: str = Field(..., max_length=255, alias="user.current_title")
-    avatar: str | None = Field(..., max_length=255, alias="user.avatar")
-    average_rating: float | None = None
+    avatar: Union[str, None] = Field(..., max_length=255, alias="user.avatar")
+    average_rating: Union[float, None] = None
 
     class Config:
         model = Mentor
@@ -43,7 +45,7 @@ class FavoriteInSchema(Schema):
 class ReviewItemSchema(ModelSchema):
     firstname: str = Field(..., max_length=255, alias="mentee.user.first_name")
     lastname: str = Field(..., max_length=255, alias="mentee.user.last_name")
-    avatar: str | None = Field(..., max_length=255, alias="mentee.user.avatar")
+    avatar: Union[str, None] = Field(..., max_length=255, alias="mentee.user.avatar")
 
     class Config:
         model = Review
