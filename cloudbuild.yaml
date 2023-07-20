@@ -21,13 +21,13 @@ steps:
         nohup python manage.py runserver 0.0.0.0:8000
     else
         cd cs428-backend
-        git pull origin master
+        git pull origin main
     fi' > init_script.sh"
     echo "EXCECUTE BASH SCRIPT FILE INTO COMPUTE ENGINE..."
     gcloud compute ssh --zone $GCP_CE_ZONE $GCP_INSTANCE -- command "bash init_script.sh"
 
 options:
-  logging: GCS_ONLY
+  logging: CLOUD_LOGGING_ONLY
     
     
 
