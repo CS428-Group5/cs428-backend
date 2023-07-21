@@ -11,6 +11,7 @@ steps:
     echo $GCP_CRED > cred_file
     gcloud auth login --cred-file=cred_file
     echo "WRITE BASH SCRIPT FILE INTO COMPUTE ENGINE..."
+    mkdir baka
     gcloud compute ssh --zone $GCP_CE_ZONE $GCP_INSTANCE --ssh-flag="-T" --ssh-flag="-t" -- command "echo 'if [ ! -d cs428-backend ]; then
         git clone git@github.com:CS428-Group5/cs428-backend.git
         cd cs428-backend
@@ -23,6 +24,7 @@ steps:
         cd cs428-backend
         git pull origin main
     fi' > init_script.sh"
+    ls
     echo "EXCECUTE BASH SCRIPT FILE INTO COMPUTE ENGINE..."
     gcloud compute ssh --zone $GCP_CE_ZONE $GCP_INSTANCE --ssh-flag="-T" --ssh-flag="-t" -- command "bash init_script.sh"
 
