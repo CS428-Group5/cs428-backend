@@ -1,7 +1,7 @@
 steps:
   - name: 'bash'  # Use the bash builder to execute the script
     script: |
-        #!/bin/bash
+        #!/usr/bin/env bash
         echo "$_ID_RSA_SECRET" > id_rsa
   - name: 'gcr.io/cloud-builders/docker'
     args: ['build', '-t', 'gcr.io/ecomercebackend-393408/cs428-backend:latest', '.']
