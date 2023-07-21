@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
 from jwt import encode, decode, InvalidTokenError, ExpiredSignatureError
 import os
-from ninja.security import APIKeyCookie
+from ninja.security import APIKeyCookie, HttpBearer
 from users.models import User
 
 # This is to get the secret key from the environment
@@ -24,15 +24,10 @@ def verify_token(token: str):
     except (InvalidTokenError, ExpiredSignatureError):
         return None, None
     
-class CookieKey(APIKeyCookie):
-    def authenticate(self, request, key):
-        session = request.session
-        if session and 'token' in session:
-            session_token = session['token']
-            user_id, user_name = verify_token(session_token)
-            print("user name", user_name)
-            if User.objects.filter(id=user_id, username=user_name).exists():
-                return user_id
-        return None
+class AuthBearer(HttpBearer):
+    def authenticate(self, request, token):
+        user_id, user_name = verify_token(token)
+        if User.objects.filter(id=user_id, username=user_name).exists():
+            return user_id
 
-cookie_key = CookieKey()
+auth_bearer = AuthBearer()

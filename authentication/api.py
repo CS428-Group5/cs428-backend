@@ -1,7 +1,7 @@
 from ninja import Router, Form, Schema
 
 from users.models import User, Expertise
-from .helpers import create_token, cookie_key
+from .helpers import create_token, auth_bearer
 
 from django.core.exceptions import ObjectDoesNotExist
 from django.http.response import HttpResponse, JsonResponse
@@ -77,25 +77,13 @@ def login(request, username: str = Form(...), password: str = Form(...)):
     try:
         user = User.objects.get(username=username, password=password)
         token = create_token(user.id, username)
-        request.session["token"] = token
-        return HttpResponse("Succesfully login", status=200)
+        return JsonResponse({"token": token}, status=200)
     except ObjectDoesNotExist:
         return HttpResponse(content="Invalid Username or Password", status=401)
 
 
-@authenticate_router.get("/cookie-acceptance")
-def cookie_acceptance(request):
-    if request.session.test_cookie_worked():
-        return HttpResponse("Client Accept Cookie", status=200)
-    else:
-        request.session.set_test_cookie()
-        return HttpResponse("Client Not Accept Cookie", status=400)
-
-
 @authenticate_router.get("/logout")
 def logout(request):
-    if "token" in request.session:
-        del request.session["token"]
     return HttpResponse("Successfully Logout", status=200)
 
 
@@ -104,8 +92,7 @@ def get_csrf_token(request):
     csrf_token = get_token(request)
     return JsonResponse({"csrf_token": csrf_token})
 
-
-@authenticate_router.post("/password_change", auth=cookie_key)
+@authenticate_router.post("/password_change", auth=auth_bearer)
 def password_change(
     request,
     username: str = Form(...),
