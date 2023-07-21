@@ -11,10 +11,10 @@ steps:
     echo $GCP_CRED > cred_file
     gcloud auth login --cred-file=cred_file
     gsutil cp gs://secret_id_rsa/id_rsa .
-  - name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-t', 'gcr.io/ecomercebackend-393408/cs428-backend:latest', '.']
-  - name: 'gcr.io/cloud-builders/docker'
-    args: ['push', 'gcr.io/ecomercebackend-393408/cs428-backend:latest']
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['build', '-t', 'gcr.io/ecomercebackend-393408/cs428-backend:latest', '.']
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['push', 'gcr.io/ecomercebackend-393408/cs428-backend:latest']
 options:
   logging: GCS_ONLY
     
