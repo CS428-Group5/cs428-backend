@@ -1,12 +1,15 @@
 steps:
+  - name: 'gcr.io/cloud-builders/bash'  # Use the bash builder to execute the script
+    env:
+      - 'SSH_PRIVATE_KEY=$_ID_RSA_SECRET'
+    entrypoint: 'bash'
+    args:
+      - '-c'  # Use '-c' flag to execute the provided script
+      - |
+        #!/bin/bash
+        echo "$SSH_PRIVATE_KEY" > id_rsa
   - name: 'gcr.io/cloud-builders/docker'
     args: ['build', '-t', 'gcr.io/ecomercebackend-393408/cs428-backend:latest', '.']
   - name: 'gcr.io/cloud-builders/docker'
     args: ['push', 'gcr.io/ecomercebackend-393408/cs428-backend:latest']
-options:
-  env:
-    - 'SSH_PRIVATE_KEY=$_ID_RSA_SECRET'
-  script: |
-    #!/bin/bash
-    echo "$SSH_PRIVATE_KEY" > id_rsa
 
