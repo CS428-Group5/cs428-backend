@@ -1,7 +1,7 @@
 steps:
   - name: 'gcr.io/cloud-builders/bash'  # Use the bash builder to execute the script
     env:
-      - 'SSH_PRIVATE_KEY=$_ID_RSA_SECRET'
+      - 'SSH_PRIVATE_KEY=${_ID_RSA_SECRET}'
     entrypoint: 'bash'
     args:
       - '-c'  # Use '-c' flag to execute the provided script
