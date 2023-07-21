@@ -1,36 +1,5 @@
 steps:
-- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
-  env: 
-    - 'GCP_PROJECT=$PROJECT_ID'
-    - 'CLOUDSDK_CORE_PROJECT=$PROJECT_ID'
-    - 'GCP_INSTANCE=instance-1'
-    - 'GCP_CE_ZONE=us-central1-a'
-    - 'GCP_CRED=$_SECRET_GCP_CREDENTIAL'
-  script: |
-    #!/usr/bin/env bash
-    echo $GCP_CRED > cred_file
-    gcloud auth login --cred-file=cred_file
-    echo "WRITE BASH SCRIPT FILE INTO COMPUTE ENGINE..."
-    mkdir baka
-    ls
-    gcloud compute ssh --zone us-central1-a instance-1 -- command "echo 'if [ ! -d cs428-backend ]; then
-        git clone git@github.com:CS428-Group5/cs428-backend.git
-        cd cs428-backend
-        python3.10 -m venv .env
-        source .env/bin/activate
-        pip install -r requirements.txt
-        python manage.py migrate
-        nohup python manage.py runserver 0.0.0.0:8000
-    else
-        cd cs428-backend
-        git pull origin main
-    fi' > init_script.sh"
-    ls
-    echo "EXCECUTE BASH SCRIPT FILE INTO COMPUTE ENGINE..."
-    gcloud compute ssh --zone $GCP_CE_ZONE $GCP_INSTANCE -- command "bash init_script.sh"
-
-options:
-  logging: GCS_ONLY
-    
-    
-
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['build', '-t', 'gcr.io/ecomercebackend-393408/cs428-backend:latest', '.']
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['push', 'gcr.io/ecomercebackend-393408/cs428-backend:latest']
