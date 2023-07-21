@@ -27,7 +27,7 @@ steps:
     gcloud compute ssh --zone $GCP_CE_ZONE $GCP_INSTANCE --ssh-flag="-T" --ssh-flag="-t" --tunnel-through-iap -- command "bash init_script.sh"
 
 options:
-  logging: CLOUD_LOGGING_ONLY
+  logging: GCS_ONLY
     
     
 
