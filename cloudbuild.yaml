@@ -1,11 +1,5 @@
 steps:
 - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
-  env: 
-    - 'GCP_PROJECT=$PROJECT_ID'
-    - 'CLOUDSDK_CORE_PROJECT=$PROJECT_ID'
-    - 'GCP_INSTANCE=instance-1'
-    - 'GCP_CE_ZONE=us-central1-a'
-    - 'GCP_CRED=$_SECRET_GCP_CREDENTIAL'
   script: |
     #!/usr/bin/env bash
     echo $GCP_CRED > cred_file
@@ -19,6 +13,12 @@ steps:
   args: ['compute', 'ssh', $GCP_INSTANCE, '--zone', $GCP_CE_ZONE, '--command', 'bash ~/.init_script.sh']
 options:
   logging: GCS_ONLY
+  env: 
+  - 'GCP_PROJECT=$PROJECT_ID'
+  - 'CLOUDSDK_CORE_PROJECT=$PROJECT_ID'
+  - 'GCP_INSTANCE=instance-1'
+  - 'GCP_CE_ZONE=us-central1-a'
+  - 'GCP_CRED=$_SECRET_GCP_CREDENTIAL'
     
     
 
