@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
 from jwt import encode, decode, InvalidTokenError, ExpiredSignatureError
 import os
-from ninja.security import APIKeyCookie, HttpBearer
+from ninja.security import HttpBearer
 from users.models import User
 
 # This is to get the secret key from the environment
