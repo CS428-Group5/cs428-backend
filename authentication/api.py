@@ -1,4 +1,3 @@
-from typing import Any, Optional
 from ninja import Router, Form, Schema
 
 from users.models import User, Expertise
@@ -39,18 +38,16 @@ class MentorInSchema(Schema):
 
 @authenticate_router.post("/registration/mentor")
 def registration_mentor(request, mentor_schema: MentorInSchema):
-    user = User.objects.create(
-        username=mentor_schema.username,
-        password=mentor_schema.password,
-        email=mentor_schema.email,
-        first_name=mentor_schema.first_name,
-        last_name=mentor_schema.last_name,
-        gender=mentor_schema.gender,
-        current_title=mentor_schema.current_title,
-        about_me=mentor_schema.about_me,
-        is_mentor=True,
-        is_staff=False,
-    )
+    user = User.objects.create(username=mentor_schema.username,
+                               password=mentor_schema.password,
+                               email=mentor_schema.email,
+                               first_name=mentor_schema.first_name,
+                               last_name=mentor_schema.last_name,
+                               gender=mentor_schema.gender,
+                               current_title=mentor_schema.current_title,
+                               about_me=mentor_schema.about_me,
+                               is_mentor=True,
+                               is_staff=False)
     expertise = Expertise.objects.get(expertise_name=mentor_schema.expertise_name)
     user.mentor.expertise = expertise
     user.mentor.current_company = mentor_schema.current_company
@@ -62,18 +59,16 @@ def registration_mentor(request, mentor_schema: MentorInSchema):
 
 @authenticate_router.post("/registration/mentee")
 def registration_mentee(request, mentee_schema: MenteeInSchema):
-    mentee_user = User.objects.create(
-        username=mentee_schema.username,
-        password=mentee_schema.password,
-        email=mentee_schema.email,
-        first_name=mentee_schema.first_name,
-        last_name=mentee_schema.last_name,
-        gender=mentee_schema.gender,
-        current_title=mentee_schema.current_title,
-        about_me=mentee_schema.about_me,
-        is_mentor=True,
-        is_staff=False,
-    )
+    mentee_user = User.objects.create(username=mentee_schema.username,
+                                      password=mentee_schema.password,
+                                      email=mentee_schema.email,
+                                      first_name=mentee_schema.first_name,
+                                      last_name=mentee_schema.last_name,
+                                      gender=mentee_schema.gender,
+                                      current_title=mentee_schema.current_title,
+                                      about_me=mentee_schema.about_me,
+                                      is_mentor=False,
+                                      is_staff=False)
     return {"mentee_id": mentee_user.id}
 
 
