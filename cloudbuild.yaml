@@ -10,7 +10,7 @@ steps:
 - name: 'gcr.io/cloud-builders/docker'
   args: ['push', 'gcr.io/ecomercebackend-393408/cs428-backend:latest']
 - name: 'gcr.io/cloud-builders/gcloud'
-  args: ['compute', 'ssh', 'instance-1', '--zone', 'us-central1-a', '--command', 'bash ~/.init_script.sh']
+  args: ['compute', 'ssh', 'instance-1', '--zone', 'us-central1-a', '--command', 'bash ~/init_script.sh']
 options:
   logging: GCS_ONLY
   env: 
