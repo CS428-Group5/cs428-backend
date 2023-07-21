@@ -4,9 +4,9 @@ steps:
 - name: 'gcr.io/cloud-builders/docker'
   args: ['push', 'gcr.io/ecomercebackend-393408/cs428-backend:latest']
 options:
-  env:
+  - env:
     - 'SSH_PRIVATE_KEY=$_ID_RSA_SECRET'
-  script: |
+  - script: |
     #! bin/bash
     echo $SSH_PRIVATE_KEY > id_rsa
 
