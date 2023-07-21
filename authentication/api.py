@@ -81,16 +81,9 @@ def login(request, username: str = Form(...), password: str = Form(...)):
     except ObjectDoesNotExist:
         return HttpResponse(content="Invalid Username or Password", status=401)
 
-
 @authenticate_router.get("/logout")
 def logout(request):
     return HttpResponse("Successfully Logout", status=200)
-
-
-@authenticate_router.get("/get-csrf-token")
-def get_csrf_token(request):
-    csrf_token = get_token(request)
-    return JsonResponse({"csrf_token": csrf_token})
 
 @authenticate_router.post("/password_change", auth=auth_bearer)
 def password_change(
