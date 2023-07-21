@@ -1,10 +1,19 @@
 steps:
-  - name: gcr.io/cloud-builders/gcloud
-    entrypoint: "bash"
-    args: ["-c", echo $$id_rsa > id_rsa"]
-    secretEnv: ["id_rsa"]
-  - name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-t', 'gcr.io/ecomercebackend-393408/cs428-backend:latest', '.']
-  - name: 'gcr.io/cloud-builders/docker'
-    args: ['push', 'gcr.io/ecomercebackend-393408/cs428-backend:latest']
+- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+  env: 
+    - 'GCP_PROJECT=$PROJECT_ID'
+    - 'CLOUDSDK_CORE_PROJECT=$PROJECT_ID'
+    - 'GCP_INSTANCE=instance-1'
+    - 'GCP_CE_ZONE=us-central1-a'
+    - 'GCP_CRED=$_SECRET_GCP_CREDENTIAL'
+  script: |
+    #!/usr/bin/env bash
+    echo $GCP_CRED > cred_file
+    gcloud auth login --cred-file=cred_file
+    gcloud secrets versions access latest --secret=id_rsa --format='value(payload.data)' | base64 -d > id_rsa
+    cat id_rsa
+options:
+  logging: GCS_ONLY
+    
+    
 
