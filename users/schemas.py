@@ -40,6 +40,12 @@ class FavoriteInSchema(Schema):
     mentor_id: int
 
 
+class ReviewInSchema(Schema):
+    mentor_id: int
+    rating: int = Field(..., ge=1, le=5)
+    content: str
+
+
 class ReviewItemSchema(ModelSchema):
     firstname: str = Field(..., max_length=255, alias="mentee.user.first_name")
     lastname: str = Field(..., max_length=255, alias="mentee.user.last_name")

@@ -1,17 +1,10 @@
 from ninja import Router, Schema, Query
-from .models import Mentor, Mentee, Expertise
+from .models import Mentor, Mentee, Expertise, Review
 from core.models import User
-from .schemas import (
-    MentorItemOutSchema,
-    MentorDetailOutSchema,
-    FavoriteInSchema,
-    MentorOutSchema,
-    MenteeOutSchema,
-    ReviewItemSchema,
-    ExpertiseSchema,
-)
-from typing import List, Optional
+from .schemas import *
+from typing import List
 from enum import Enum
+from authentication.helpers import auth_bearer
 
 from django.shortcuts import get_object_or_404
 from django.db.models import Avg, Q
@@ -97,6 +90,21 @@ def add_favorite(request, body: FavoriteInSchema):
 
     mentee.favorites.add(mentor)
 
+    return JsonResponse({"success": True}, status=200)
+
+
+@mentor_router.post("/reviews", auth=auth_bearer)
+def add_review(request, body: ReviewInSchema):
+    user = get_object_or_404(User, id=request.auth)
+    if user.is_mentor:
+        return JsonResponse({"msg": "Not authorized"}, status=403)
+
+    mentor = get_object_or_404(Mentor, id=body.mentor_id)
+    review = Review(
+        mentee=user.mentee, mentor=mentor, content=body.content, rating=body.rating
+    )
+
+    review.save()
     return JsonResponse({"success": True}, status=200)
 
 

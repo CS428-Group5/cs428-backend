@@ -26,7 +26,7 @@ SECRET_KEY = "django-insecure-2md5!(o5pj@e!%nafp3i!9wv5idg_bge6#$kodjsw4zsy17os3
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['34.29.48.120', 'localhost']
+ALLOWED_HOSTS = ["34.29.48.120", "localhost", "127.0.0.1"]
 
 
 # Application definition
@@ -82,11 +82,11 @@ WSGI_APPLICATION = "base.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        'NAME': 'mentoree', # database name
-        'USER': 'ecomerce',
-        'PASSWORD': '1234',
-        'HOST': '34.29.48.120',
-        'PORT': '49153',
+        "NAME": "mentoree",  # database name
+        "USER": "ecomerce",
+        "PASSWORD": "1234",
+        "HOST": "34.29.48.120",
+        "PORT": "49153",
     }
 }
 
@@ -114,10 +114,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
-CSRF_TRUSTED_ORIGINS = [
-    "http://localhost:5173",
-    "http://127.0.0.1:5173"
-]
+CSRF_TRUSTED_ORIGINS = ["http://localhost:5173", "http://127.0.0.1:5173"]
 
 LANGUAGE_CODE = "en-us"
 
