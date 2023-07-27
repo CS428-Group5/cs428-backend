@@ -95,6 +95,19 @@ class MentorOutSchema(ModelSchema):
         ]
 
 
+class UserUpdateSchema(Schema):
+    first_name: str = Field(..., max_length=255)
+    last_name: str = Field(..., max_length=255)
+    about_me: str = Field(..., max_length=255)
+    current_title: str = Field(..., max_length=255)
+    avatar: str | None = Field(..., max_length=255)
+
+    # Additional fields for mentor
+    expertise_id: int | None
+    current_company: str | None
+    default_session_price: float | None
+
+
 """
 Other Schemas
 """
