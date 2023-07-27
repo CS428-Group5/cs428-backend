@@ -128,6 +128,27 @@ def get_user_information(request, id: int):
     return dict(schema)
 
 
+@user_router.put("/{id}")
+def update_user_information(request, id: int, body: UserUpdateSchema):
+    user = get_object_or_404(User, id=id)
+
+    user.first_name = body.first_name
+    user.last_name = body.last_name
+    user.current_title = body.current_title
+    user.about_me = body.about_me
+    user.avatar = body.avatar
+
+    if user.is_mentor:
+        expertise = get_object_or_404(Expertise, id=body.expertise_id)
+
+        user.mentor.expertise = expertise
+        user.mentor.current_company = body.current_company
+        user.mentor.default_session_price = body.default_session_price
+
+    user.save()
+    return JsonResponse({"success": True}, status=200)
+
+
 """
 Expertises API
 """
