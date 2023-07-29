@@ -111,7 +111,20 @@ def add_review(request, body: ReviewInSchema):
 """
 User API
 """
+@user_router.get("/my-account-info", auth=auth_bearer)
+def get_account_information(request):
+    session_user_id = request.auth
+    user = get_object_or_404(User, id=session_user_id)
+    schema = None
 
+    if user.is_mentor:
+        mentor_user = get_object_or_404(Mentor, user__id=session_user_id)
+        schema = MentorOutSchema.from_orm(mentor_user)
+    else:
+        mentee_user = get_object_or_404(Mentee, user__id=session_user_id)
+        schema = MenteeOutSchema.from_orm(mentee_user)
+    return dict(schema)
+    
 
 @user_router.get("/{id}")
 def get_user_information(request, id: int):
