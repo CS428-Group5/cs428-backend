@@ -105,3 +105,7 @@ def password_change(
         return HttpResponse("Successfully Change Password", status=200)
     else:
         return HttpResponse("Invalid Username or Password", status=400)
+
+@authenticate_router.get("/is-valid-token", auth=auth_bearer)
+def is_valid_token(request):
+    return HttpResponse("Authorized", status=200)
