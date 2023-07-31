@@ -1,3 +1,4 @@
+from typing import Iterable, Optional
 from django.db import models
 from core.models import User
 from django.dispatch import receiver
@@ -63,3 +64,11 @@ class Review(models.Model):
     rating = models.IntegerField(
         default=1, validators=[MinValueValidator(1), MaxValueValidator(5)]
     )
+
+##################################################################################
+
+class MentorSession(models.Model):
+    mentor = models.ForeignKey(Mentor, on_delete=models.CASCADE)
+    session_time = models.TimeField()
+    session_date = models.DateField()
+    is_book = models.BooleanField(default=False)

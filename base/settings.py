@@ -41,6 +41,8 @@ INSTALLED_APPS = [
     "corsheaders",
     "core",
     "users",
+    "session",
+    "google_oauth2",
     "authentication.apps.AuthenticationConfig",
 ]
 
