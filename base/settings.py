@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     "users",
     "session",
     "google_oauth2",
+    "payment",
     "authentication.apps.AuthenticationConfig",
 ]
 
@@ -142,3 +143,13 @@ AUTH_USER_MODEL = "core.User"
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media/")
+
+VNPAY_RETURN_URL = f"{os.environ.get('VNPAY_RETURN_URL_HOST', 'http://localhost:5173')}/payment_return"  # get from config
+VNPAY_PAYMENT_URL = (
+    "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html"  # get from config
+)
+VNPAY_API_URL = "https://sandbox.vnpayment.vn/merchant_webapi/api/transaction"
+VNPAY_TMN_CODE = "UF84EZ06"  # Website ID in VNPAY System, get from config
+VNPAY_HASH_SECRET_KEY = (
+    "CJVRCMTEDHAXFCGQHICYMNIZUSKLBQPR"  # Secret key for create checksum,get from config
+)
