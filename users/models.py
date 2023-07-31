@@ -4,7 +4,7 @@ from core.models import User
 from django.dispatch import receiver
 from django.db.models.signals import post_save
 from django.core.validators import MaxValueValidator, MinValueValidator
-
+from datetime import date
 
 class Expertise(models.Model):
     expertise_name = models.CharField(max_length=255)
@@ -66,9 +66,3 @@ class Review(models.Model):
     )
 
 ##################################################################################
-
-class MentorSession(models.Model):
-    mentor = models.ForeignKey(Mentor, on_delete=models.CASCADE)
-    session_time = models.TimeField()
-    session_date = models.DateField()
-    is_book = models.BooleanField(default=False)

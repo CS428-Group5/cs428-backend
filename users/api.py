@@ -106,8 +106,7 @@ def add_review(request, body: ReviewInSchema):
 
     review.save()
     return JsonResponse({"success": True}, status=200)
-
-
+    
 """
 User API
 """
