@@ -10,6 +10,7 @@ from .schemas import MentorSessionInSchema, MentorSessionOutSchema, BookedSessio
 from google_oauth2.helpers import create_calendar, cancel_calendar
 
 from typing import List
+from itertools import chain
 import json
 
 session_router= Router()
@@ -86,8 +87,15 @@ def get_all_booked_sessions(request, user_id: int):
     user = get_object_or_404(User, id=user_id)
     if user.is_mentor:
         mentor = get_object_or_404(Mentor, user=user)
-        mentor_session = get_object_or_404(MentorSession, mentor=mentor)
-        return BookedSession.objects.filter(mentor_session=mentor_session)
+        mentor_sessions = MentorSession.objects.filter(mentor=mentor)
+        book_sessions = []
+        book_sessions = chain(
+            *map(
+                lambda mentor_session: BookedSession.objects.filter(mentor_session=mentor_session),
+                mentor_sessions
+            )
+        )
+        return list(book_sessions)
     else:
         mentee = get_object_or_404(Mentee, user=user)
         return BookedSession.objects.filter(mentee=mentee)
