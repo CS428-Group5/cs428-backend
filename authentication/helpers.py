@@ -6,7 +6,7 @@ from users.models import User
 
 # This is to get the secret key from the environment
 SECRET_KEY = os.getenv("SECRET_KEY", "default_secret_key")
-TOKEN_EXPIRATION = int(os.getenv("TOKEN_EXPIRATION", "5"))
+TOKEN_EXPIRATION = int(os.getenv("TOKEN_EXPIRATION", "30"))
 
 def create_token(user_id: int, username: str) -> str:
     payload = {

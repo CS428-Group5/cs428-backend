@@ -71,6 +71,7 @@ class UserSchema(ModelSchema):
             "avatar",
             "about_me",
             "current_title",
+            "email",
             "is_mentor",
         ]
 

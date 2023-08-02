@@ -41,6 +41,8 @@ INSTALLED_APPS = [
     "corsheaders",
     "core",
     "users",
+    "session",
+    "google_oauth2",
     "payment",
     "authentication.apps.AuthenticationConfig",
 ]
@@ -82,12 +84,8 @@ WSGI_APPLICATION = "base.wsgi.application"
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": "mentoree",  # database name
-        "USER": "ecomerce",
-        "PASSWORD": "1234",
-        "HOST": "34.29.48.120",
-        "PORT": "49153",
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": "db.sqlite3",
     }
 }
 
