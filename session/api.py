@@ -88,7 +88,6 @@ def get_all_booked_sessions(request, user_id: int):
     if user.is_mentor:
         mentor = get_object_or_404(Mentor, user=user)
         mentor_sessions = MentorSession.objects.filter(mentor=mentor)
-        book_sessions = []
         book_sessions = chain(
             *map(
                 lambda mentor_session: BookedSession.objects.filter(mentor_session=mentor_session),
