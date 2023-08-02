@@ -23,7 +23,7 @@ def add_mentor_session(request, body: MentorSessionInSchema):
         mentor_id=mentor.id,
         session_time=body.session_time,
         session_date=body.session_date,
-        is_book=body.is_book
+        is_book=False
     )
     return JsonResponse({"success": True}, status=200)
 
