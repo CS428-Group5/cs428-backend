@@ -7,7 +7,8 @@ from enum import Enum
 from authentication.helpers import auth_bearer
 
 from django.shortcuts import get_object_or_404
-from django.db.models import Avg, Q
+from django.db.models import Avg, Q, Value as V
+from django.db.models.functions import Concat
 from django.http import JsonResponse
 
 mentor_router = Router()
@@ -33,6 +34,7 @@ class MentorFilterSchema(Schema):
     price_to: int | None = None
     expertise: List[str] | None = None
     experience: List[Experience] | None = None
+    name: str | None = None
 
 
 @mentor_router.get("/", response=List[MentorItemOutSchema])
@@ -42,6 +44,11 @@ def get_mentors(
 ):
     mentors = Mentor.objects.all()
     print(filters.price_from)
+
+    if filters.name is not None:
+        mentors = mentors.annotate(
+            full_name=Concat("user__first_name", V(" "), "user__last_name")
+        ).filter(full_name__icontains=filters.name)
 
     if filters.expertise is not None:
         mentors = mentors.filter(expertise__expertise_name__in=filters.expertise)
@@ -106,10 +113,13 @@ def add_review(request, body: ReviewInSchema):
 
     review.save()
     return JsonResponse({"success": True}, status=200)
-    
+
+
 """
 User API
 """
+
+
 @user_router.get("/my-account-info", auth=auth_bearer)
 def get_account_information(request):
     session_user_id = request.auth
@@ -123,7 +133,7 @@ def get_account_information(request):
         mentee_user = get_object_or_404(Mentee, user__id=session_user_id)
         schema = MenteeOutSchema.from_orm(mentee_user)
     return dict(schema)
-    
+
 
 @user_router.get("/{id}")
 def get_user_information(request, id: int):
