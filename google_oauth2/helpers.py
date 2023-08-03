@@ -52,6 +52,7 @@ def create_calendar(
                 "conferenceSolutionKey": {
                     "type": "hangoutsMeet"
                 },
+                "requestId": 'mentoree_id',
             }
         },
         "summary": "Mentoree's Discussion",
@@ -59,6 +60,7 @@ def create_calendar(
         'description': "This is the discussion event registered in the Mentoree Website"
     }
     response = requests.post(url, headers=headers, json=event_props).json()
+    print(response)
     return response
 
 def cancel_calendar(
