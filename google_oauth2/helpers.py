@@ -1,27 +1,31 @@
 import requests
-from datetime import datetime, timedelta
+import base64
 
 def create_calendar(
     credentials,
-    start_date, 
-    start_time, 
+    start_date_time,
+    end_date_time,
     mentor_email, 
     mentee_email
     ):
+    api_key = "AIzaSyBmopU3E6lwaK63pUlWziP99HE0QezpXG4"
     headers = {'Authorization': 'Bearer {}'.format(credentials['access_token'])}
     url = 'https://www.googleapis.com/calendar/v3/calendars/primary/events?conferenceDataVersion=1'
     event_props = {
-        "end": {
-            "date": start_date,
-            "time": (datetime.strptime(start_time, "%H:%M:%S") + timedelta(minutes=30)).strftime("%H:%M:%S")
-        },
         "start": {
-            "date": start_date,
-            "time": start_time
+            "dateTime": start_date_time,
+            'timeZone': 'Asia/Ho_Chi_Minh',
+        },
+        "end": {
+            "dateTime": end_date_time,
+            'timeZone': 'Asia/Ho_Chi_Minh',
         },
         "recurrence": [
-            "RRULE:FREQ=DAILY;COUNT=2"
+            "RRULE:FREQ=DAILY;COUNT=1"
         ],
+        "organizer": {
+            "email": mentor_email
+        },
         "attendees": [
             {
                 "email": mentor_email
