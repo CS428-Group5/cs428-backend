@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     "users",
     "session",
     "google_oauth2",
+    "meeting_video",
     "payment",
     "authentication.apps.AuthenticationConfig",
 ]
