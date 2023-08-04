@@ -10,7 +10,9 @@ from .schemas import MentorSessionInSchema, MentorSessionOutSchema, BookedSessio
 from google_oauth2.helpers import create_calendar, cancel_calendar
 
 from typing import List
+from itertools import chain
 import json
+from datetime import datetime, timedelta
 
 session_router= Router()
 
@@ -23,14 +25,13 @@ def add_mentor_session(request, body: MentorSessionInSchema):
         mentor_id=mentor.id,
         session_time=body.session_time,
         session_date=body.session_date,
-        is_book=body.is_book
+        is_book=False
     )
     return JsonResponse({"success": True}, status=200)
 
-@session_router.get("/{user_id}/mentor_sessions/all", response=List[MentorSessionOutSchema])
-def get_mentor_session(request, user_id: int):
-    mentor = get_object_or_404(Mentor, user_id=user_id)
-    return MentorSession.objects.filter(mentor_id=mentor.id)
+@session_router.get("/{mentor_id}/mentor_sessions/all", response=List[MentorSessionOutSchema])
+def get_mentor_session(request, mentor_id: int):
+    return MentorSession.objects.filter(mentor_id=mentor_id)
 
 @session_router.delete("/mentor_sessions/{mentor_session_id}" , auth=auth_bearer)
 def delete_mentor_session(request, mentor_session_id: int):
@@ -59,10 +60,15 @@ def add_booked_session(request, mentor_session_id: int):
         if mentor_session.is_book:
             return JsonResponse({"error": "The session has been already booked"}, status=403)
         
+        start_date_time = datetime.strptime(
+            str(mentor_session.session_date) + " " + str(mentor_session.session_time),
+            '%Y-%m-%d %H:%M:%S'
+        )
+        end_date_time = start_date_time + timedelta(minutes=30)
         response = create_calendar(
                 credentials=credentials,
-                start_date=str(mentor_session.session_date),
-                start_time=str(mentor_session.session_time),
+                start_date_time=start_date_time.strftime('%Y-%m-%dT%H:%M:%S.000+07:00'),
+                end_date_time=end_date_time.strftime('%Y-%m-%dT%H:%M:%S.000+07:00'),
                 mentee_email=mentee.user.email,
                 mentor_email=mentor.user.email
             )
@@ -77,6 +83,7 @@ def add_booked_session(request, mentor_session_id: int):
                 mentee_id=mentee.id,
                 mentor_session_id=mentor_session.id,
                 event_id=response["id"],
+                event_link=response["htmlLink"],
                 cancelled_by=0
             )
         return JsonResponse({"success": True}, status=200)
@@ -86,8 +93,14 @@ def get_all_booked_sessions(request, user_id: int):
     user = get_object_or_404(User, id=user_id)
     if user.is_mentor:
         mentor = get_object_or_404(Mentor, user=user)
-        mentor_session = get_object_or_404(MentorSession, mentor=mentor)
-        return BookedSession.objects.filter(mentor_session=mentor_session)
+        mentor_sessions = MentorSession.objects.filter(mentor=mentor)
+        book_sessions = chain(
+            *map(
+                lambda mentor_session: BookedSession.objects.filter(mentor_session=mentor_session),
+                mentor_sessions
+            )
+        )
+        return list(book_sessions)
     else:
         mentee = get_object_or_404(Mentee, user=user)
         return BookedSession.objects.filter(mentee=mentee)
