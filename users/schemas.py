@@ -81,7 +81,7 @@ class MenteeOutSchema(ModelSchema):
 
     class Config:
         model = Mentee
-        model_exclude = ["favorites", "id"]
+        model_exclude = ["favorites"]
 
 
 class MentorOutSchema(ModelSchema):
@@ -90,6 +90,7 @@ class MentorOutSchema(ModelSchema):
     class Config:
         model = Mentor
         model_fields = [
+            "id",
             "expertise",
             "current_company",
             "default_session_price",
