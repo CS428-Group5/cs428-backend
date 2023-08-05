@@ -24,7 +24,7 @@ session_router = Router()
 @session_router.get(
     "/mentor_sessions/{mentor_session_id}", response=MentorSessionOutSchema
 )
-def get_mentor_session(request, mentor_session_id: int):
+def get_single_mentor_session(request, mentor_session_id: int):
     return get_object_or_404(MentorSession, id=mentor_session_id)
 
 
