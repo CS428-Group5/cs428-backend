@@ -8,6 +8,9 @@ class MentorSession(models.Model):
     session_date = models.DateField()
     is_book = models.BooleanField(default=False)
 
+    def __str__(self) -> str:
+        return str(self.id)
+
 class BookedSession(models.Model):
     mentee = models.ForeignKey(Mentee, on_delete=models.CASCADE)
     mentor_session = models.ForeignKey(MentorSession, null=True, on_delete=models.CASCADE)
@@ -23,6 +26,9 @@ class BookedSession(models.Model):
         default=0
     )
 
+    def __str__(self) -> str:
+        return str(self.id)
+    
     def save(self, *arg, **kwargs):
         if self.cancelled_by == 1 and BookedSession.objects.filter(id=self.id, cancelled_by=2):
             raise ValueError("A mentor has already canceled this session. A mentee cannot cancel it now")
