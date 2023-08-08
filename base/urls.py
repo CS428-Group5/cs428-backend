@@ -24,5 +24,4 @@ from .api import api
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/", api.urls),
-    path('meeting/', include('meeting_video.urls'))
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

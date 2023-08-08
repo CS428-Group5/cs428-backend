@@ -26,7 +26,8 @@ def oauth2callback(request):
                 'grant_type': 'authorization_code'}
         r = requests.post('https://oauth2.googleapis.com/token', data=data)
         request.session['credentials'] = r.text
-        return HttpResponseRedirect("/api/docs")
+        session_id = request.session.session_key
+        return HttpResponseRedirect(f"http://localhost:5173?session_id={session_id}")
 
 @google_oauth2_router.get("/oauth2clear")
 def oauth2clear(request):
