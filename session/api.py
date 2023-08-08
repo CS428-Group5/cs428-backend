@@ -7,7 +7,11 @@ from django.contrib.sessions.models import Session
 from session.models import MentorSession, BookedSession
 from authentication.helpers import auth_bearer
 from users.models import Mentor, Mentee, User
-from .schemas import MentorSessionInSchema, MentorSessionOutSchema, BookedSessionOutSchema
+from .schemas import (
+    MentorSessionInSchema,
+    MentorSessionOutSchema,
+    BookedSessionOutSchema,
+)
 from google_oauth2.helpers import create_calendar, cancel_calendar
 
 from typing import List
@@ -15,31 +19,51 @@ from itertools import chain
 import json
 from datetime import datetime, timedelta
 
-session_router= Router()
+session_router = Router()
+
+
+@session_router.get(
+    "/mentor_sessions/{mentor_session_id}", response=MentorSessionOutSchema
+)
+def get_single_mentor_session(request, mentor_session_id: int):
+    return get_object_or_404(MentorSession, id=mentor_session_id)
+
 
 @session_router.post("/mentor_sessions", auth=auth_bearer)
 def add_mentor_session(request, body: MentorSessionInSchema):
     mentor = get_object_or_404(Mentor, user_id=request.auth)
-    if MentorSession.objects.filter(mentor_id=mentor.id, session_time=body.session_time, session_date=body.session_date):
+    if MentorSession.objects.filter(
+        mentor_id=mentor.id,
+        session_time=body.session_time,
+        session_date=body.session_date,
+    ):
         raise ValueError("The datetime has been allocated")
     MentorSession.objects.create(
         mentor_id=mentor.id,
         session_time=body.session_time,
         session_date=body.session_date,
-        is_book=False
+        is_book=False,
     )
     return JsonResponse({"success": True}, status=200)
 
-@session_router.get("/{mentor_id}/mentor_sessions/all", response=List[MentorSessionOutSchema])
+
+@session_router.get(
+    "/{mentor_id}/mentor_sessions/all", response=List[MentorSessionOutSchema]
+)
 def get_mentor_session(request, mentor_id: int):
     return MentorSession.objects.filter(mentor_id=mentor_id)
 
-@session_router.delete("/mentor_sessions/{mentor_session_id}" , auth=auth_bearer)
+
+@session_router.delete("/mentor_sessions/{mentor_session_id}", auth=auth_bearer)
 def delete_mentor_session(request, mentor_session_id: int):
     mentor = get_object_or_404(Mentor, user_id=request.auth)
-    mentor_session = get_object_or_404(MentorSession, id=mentor_session_id, mentor=mentor.id)
+    mentor_session = get_object_or_404(
+        MentorSession, id=mentor_session_id, mentor=mentor.id
+    )
     if BookedSession.objects.filter(mentor_session=mentor_session):
-        return JsonResponse({"error": "Cancel the relevant booked session first"}, status=403)
+        return JsonResponse(
+            {"error": "Cancel the relevant booked session first"}, status=403
+        )
     mentor_session.delete()
     return JsonResponse({"success": True}, status=200)
 
@@ -93,7 +117,10 @@ def add_booked_session(request, mentor_session_id: int):
         )
     return JsonResponse({"success": True}, status=200)
 
-@session_router.get("/booked_session/{user_id}/all", response=List[BookedSessionOutSchema])
+
+@session_router.get(
+    "/booked_session/{user_id}/all", response=List[BookedSessionOutSchema]
+)
 def get_all_booked_sessions(request, user_id: int):
     user = get_object_or_404(User, id=user_id)
     if user.is_mentor:
@@ -101,8 +128,10 @@ def get_all_booked_sessions(request, user_id: int):
         mentor_sessions = MentorSession.objects.filter(mentor=mentor)
         book_sessions = chain(
             *map(
-                lambda mentor_session: BookedSession.objects.filter(mentor_session=mentor_session),
-                mentor_sessions
+                lambda mentor_session: BookedSession.objects.filter(
+                    mentor_session=mentor_session
+                ),
+                mentor_sessions,
             )
         )
         return list(book_sessions)
@@ -120,7 +149,9 @@ def cancel_booked_session(request, booked_session_id: int):
     booked_session.cancelled_by = 1 if user.is_mentor else 2
     booked_session.save()
 
-    mentor_session = get_object_or_404(MentorSession, id=booked_session.mentor_session_id)
+    mentor_session = get_object_or_404(
+        MentorSession, id=booked_session.mentor_session_id
+    )
     mentor_session.is_book = False
     mentor_session.save()
 
