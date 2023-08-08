@@ -30,7 +30,7 @@ window.onload = function () {
         // @param 3: Room ID
         // @param 4: User ID
         // @param 5: Username
-    const roomID = "{{session_id}}";
+    const roomID = getUrlParams(window.location.href)['session_id'] || (Math.floor(Math.random() * 10000) + "");
     const userID = "{{user_id}}";
     const userName = "{{full_name}}";
     const appID = 572360886;
@@ -49,7 +49,7 @@ window.onload = function () {
                 mode: ZegoUIKitPrebuilt.VideoConference,
             },
             onLeaveRoom: () => {
-                window.location.href = "http://localhost:8000/api/docs"
+                window.location.href = "http://localhost:5173" 
             },
            	turnOnMicrophoneWhenJoining: true,
            	turnOnCameraWhenJoining: true,
