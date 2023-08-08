@@ -2,6 +2,7 @@ from ninja import Router
 from django.shortcuts import get_object_or_404
 from django.http import JsonResponse, HttpResponseRedirect
 from django.db import transaction
+from django.contrib.sessions.models import Session
 
 from session.models import MentorSession, BookedSession
 from authentication.helpers import auth_bearer
@@ -50,12 +51,16 @@ def add_booked_session(request, mentor_session_id: int):
     mentee = get_object_or_404(Mentee, user_id=request.auth)
     mentor = get_object_or_404(Mentor, id=mentor_session.mentor.id)
     
-    # if 'credentials' not in request.session:
-    #     return HttpResponseRedirect("/api/google-oauth2/oauth2callback")
+    # session_id = request.GET.get("session_id", None)
+    # if session_id is None:
+    #     return HttpResponseRedirect(f"/api/google-oauth2/oauth2callback")
     
+    # session = Session.objects.get(session_key=session_id)
+    # request.session.update(session.get_decoded())
     # credentials = json.loads(request.session['credentials'])
+
     # if credentials['expires_in'] <= 0:
-    #     return HttpResponseRedirect("/api/google-oauth2/oauth2callback")
+    #     return HttpResponseRedirect(f"/api/google-oauth2/oauth2callback")
     # else:
     #     if mentor_session.is_book:
     #         return JsonResponse({"error": "The session has been already booked"}, status=403)
@@ -75,15 +80,15 @@ def add_booked_session(request, mentor_session_id: int):
     #     if "error" in response:
     #         if response["error"]["status"] == "UNAUTHENTICATED":
     #             del request.session['credentials']
-    #             return HttpResponseRedirect("/api/google-oauth2/oauth2callback")
+    #             return HttpResponseRedirect(f"/api/google-oauth2/oauth2callback")
             
     mentor_session.is_book = True
     mentor_session.save()
     BookedSession.objects.create(
             mentee_id=mentee.id,
             mentor_session_id=mentor_session.id,
-            event_id=  None,#response["id"]
-            event_link= None,#response["htmlLink"]
+            event_id=None,
+            event_link=None,
             cancelled_by=0
         )
     return JsonResponse({"success": True}, status=200)
@@ -133,4 +138,4 @@ def cancel_booked_session(request, booked_session_id: int):
     #                 del request.session['credentials']
     #                 return HttpResponseRedirect("/api/google-oauth2/oauth2callback")
     #         raise ValueError(response)
-    return JsonResponse({"success": True}, status=200)
+    #     return JsonResponse({"success": True}, status=200)
