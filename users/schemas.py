@@ -1,6 +1,9 @@
 from ninja import ModelSchema, Field, Schema
 from .models import Mentor, Mentee, Review, Expertise
 from core.models import User
+from session.models import BookedSession
+
+from datetime import date, time
 
 """
 Mentor schemas
@@ -109,6 +112,20 @@ class UserUpdateSchema(Schema):
     current_company: str | None
     default_session_price: float | None
 
+class PurchaseHistoryOutSchema(ModelSchema):
+    mentee_id: int = Field(alias="mentee.id")
+    mentor_id: int = Field(alias="mentor_session.mentor.id")
+    session_date: date  = Field(...,alias="mentor_session.session_date")
+    session_time: time = Field(...,alias="mentor_session.session_time")
+    session_price: float | None = Field(...,alias="mentor_session.session_price")
+    mentor_first_name: str = Field(...,alias="mentor_session.mentor.user.first_name")
+    mentor_last_name: str = Field(...,alias="mentor_session.mentor.user.last_name")
+    mentee_first_name: str = Field(...,alias="mentee.user.first_name")
+    mentee_last_name: str = Field(...,alias="mentee.user.last_name")
+
+    class Config:
+        model = BookedSession
+        model_exclude = ["mentee", "mentor_session"]
 
 """
 Other Schemas

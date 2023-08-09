@@ -5,11 +5,14 @@ from .schemas import *
 from typing import List
 from enum import Enum
 from authentication.helpers import auth_bearer
+from session.models import MentorSession
 
 from django.shortcuts import get_object_or_404
 from django.db.models import Avg, Q, Value as V
 from django.db.models.functions import Concat
 from django.http import JsonResponse
+
+from itertools import chain
 
 mentor_router = Router()
 user_router = Router()
@@ -187,6 +190,25 @@ def update_user_information(request, id: int, body: UserUpdateSchema):
     user.save()
     return JsonResponse({"success": True}, status=200)
 
+@user_router.get("/purchase-history/", auth=auth_bearer, response=List[PurchaseHistoryOutSchema])
+def get_purchase_history(request):
+    print(request.auth)
+    user = get_object_or_404(User, id=request.auth)
+    if user.is_mentor:
+        mentor = get_object_or_404(Mentor, user=user)
+        mentor_sessions = MentorSession.objects.filter(mentor=mentor)
+        book_sessions = chain(
+            *map(
+                lambda mentor_session: BookedSession.objects.filter(
+                    mentor_session=mentor_session
+                ),
+                mentor_sessions,
+            )
+        )
+        return list(book_sessions)
+    else:
+        mentee = get_object_or_404(Mentee, user=user)
+        return BookedSession.objects.filter(mentee=mentee)
 
 """
 Expertises API

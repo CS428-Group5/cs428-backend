@@ -16,7 +16,6 @@ from google_oauth2.helpers import create_calendar, cancel_calendar
 
 from typing import List
 from itertools import chain
-import json
 from datetime import datetime, timedelta
 
 session_router = Router()
@@ -42,6 +41,7 @@ def add_mentor_session(request, body: MentorSessionInSchema):
         mentor_id=mentor.id,
         session_time=body.session_time,
         session_date=body.session_date,
+        session_price = mentor.default_session_price,
         is_book=False,
     )
     return JsonResponse({"success": True}, status=200)
@@ -51,7 +51,11 @@ def add_mentor_session(request, body: MentorSessionInSchema):
     "/{mentor_id}/mentor_sessions/all", response=List[MentorSessionOutSchema]
 )
 def get_mentor_session(request, mentor_id: int):
-    return MentorSession.objects.filter(mentor_id=mentor_id)
+    mentor_sessions = filter(
+        lambda mentor_session: not mentor_session.is_book,
+        MentorSession.objects.filter(mentor_id=mentor_id)
+    )
+    return list(mentor_sessions)
 
 
 @session_router.delete("/mentor_sessions/{mentor_session_id}", auth=auth_bearer)
@@ -73,8 +77,8 @@ def delete_mentor_session(request, mentor_session_id: int):
 def add_booked_session(request, mentor_session_id: int):
     mentor_session = get_object_or_404(MentorSession, id=mentor_session_id)
     mentee = get_object_or_404(Mentee, user_id=request.auth)
-    mentor = get_object_or_404(Mentor, id=mentor_session.mentor.id)
     
+    # mentor = get_object_or_404(Mentor, id=mentor_session.mentor.id)    
     # session_id = request.GET.get("session_id", None)
     # if session_id is None:
     #     return HttpResponseRedirect(f"/api/google-oauth2/oauth2callback")
@@ -111,8 +115,9 @@ def add_booked_session(request, mentor_session_id: int):
     BookedSession.objects.create(
             mentee_id=mentee.id,
             mentor_session_id=mentor_session.id,
-            event_id=None,
-            event_link=None,
+            # event_id=None,
+            # event_link=None,
+            booked_date = datetime.now().strftime('%Y-%m-%d'),
             cancelled_by=0
         )
     return JsonResponse({"success": True}, status=200)
@@ -154,6 +159,7 @@ def cancel_booked_session(request, booked_session_id: int):
     )
     mentor_session.is_book = False
     mentor_session.save()
+    return JsonResponse({"success": True}, status=200)
 
     # if 'credentials' not in request.session:
     #     return HttpResponseRedirect("/api/google-oauth2/oauth2callback")

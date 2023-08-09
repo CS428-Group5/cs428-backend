@@ -6,6 +6,9 @@ class MentorSession(models.Model):
     mentor = models.ForeignKey(Mentor, on_delete=models.CASCADE)
     session_time = models.TimeField()
     session_date = models.DateField()
+    session_price =  models.DecimalField(
+        max_digits=13, decimal_places=4, null=True, blank=True
+    )
     is_book = models.BooleanField(default=False)
 
     def __str__(self) -> str:
@@ -14,8 +17,9 @@ class MentorSession(models.Model):
 class BookedSession(models.Model):
     mentee = models.ForeignKey(Mentee, on_delete=models.CASCADE)
     mentor_session = models.ForeignKey(MentorSession, null=True, on_delete=models.CASCADE)
-    event_id = models.TextField(null=True)
-    event_link = models.TextField(null=True)
+    # event_id = models.TextField(null=True)
+    # event_link = models.TextField(null=True)
+    booked_date = models.DateField(null=True)
     CANCELED_BY_CHOICES = (
         (0, "Not canceled"),
         (1, "Mentor canceled"),
