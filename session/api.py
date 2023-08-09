@@ -170,3 +170,22 @@ def cancel_booked_session(request, booked_session_id: int):
     #                 return HttpResponseRedirect("/api/google-oauth2/oauth2callback")
     #         raise ValueError(response)
     #     return JsonResponse({"success": True}, status=200)
+
+@session_router.get("/booked_session/{booked_session_id}/meeting_link", auth=auth_bearer)
+def get_booked_session_meeting(request, booked_session_id: int):
+    user = get_object_or_404(User, id=request.auth)
+    booked_session = get_object_or_404(BookedSession, id=booked_session_id)
+    if user.is_mentor:
+        if booked_session.mentor_session.mentor.user.id != user.id:
+            raise KeyError("User and BookedSession don't match with each other")
+    else:
+        if booked_session.mentee.user.id != user.id:
+            raise KeyError("User and BookedSession don't match with each other")
+    
+    meeting_url = (
+        "http://localhost:8000/meeting?"
+        f"session_id={booked_session.id}&"
+        f"""full_name={user.first_name + " " + user.last_name}&"""
+        f"user_id={user.id}"
+    )
+    return JsonResponse({"meeting_url": meeting_url}, status=200)
