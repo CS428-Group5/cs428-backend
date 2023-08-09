@@ -87,6 +87,13 @@ def get_mentor_reviews(request, mentor_id: int):
     return mentor.review_set.all()
 
 
+@mentor_router.get("/favorite", auth=auth_bearer, response=List[MentorItemOutSchema])
+def get_favorite(request):
+    user_id = request.auth
+    favorites = get_object_or_404(Mentee, user__id=user_id).favorites.all()
+    return favorites
+
+
 @mentor_router.post("/favorite")
 def add_favorite(request, body: FavoriteInSchema):
     mentee_id = 1  # TODO: get from authentication data
@@ -98,6 +105,16 @@ def add_favorite(request, body: FavoriteInSchema):
     mentee.favorites.add(mentor)
 
     return JsonResponse({"success": True}, status=200)
+
+
+@mentor_router.delete("/favorite", auth=auth_bearer)
+def delete_favorite(request, body: FavoriteInSchema):
+    user_id = request.auth
+    mentee = get_object_or_404(Mentee, user__id=user_id)
+    mentor = get_object_or_404(Mentor, id=body.mentor_id)
+
+    mentee.favorites.remove(mentor)
+    return JsonResponse({}, status=204)
 
 
 @mentor_router.post("/reviews", auth=auth_bearer)
