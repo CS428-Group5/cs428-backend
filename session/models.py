@@ -14,7 +14,7 @@ class MentorSession(models.Model):
 class BookedSession(models.Model):
     mentee = models.ForeignKey(Mentee, on_delete=models.CASCADE)
     mentor_session = models.ForeignKey(MentorSession, null=True, on_delete=models.CASCADE)
-    event_id = models.TextField()
+    event_id = models.TextField(null=True)
     event_link = models.TextField(null=True)
     CANCELED_BY_CHOICES = (
         (0, "Not canceled"),
