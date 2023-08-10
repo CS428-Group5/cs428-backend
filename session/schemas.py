@@ -16,7 +16,7 @@ class BookedSessionOutSchema(ModelSchema):
 
     class Config:
         model = BookedSession
-        model_exclude = ["mentee", "mentor_session"]
+        model_exclude = ["mentee", "mentor_session", "booked_date"]
 
 class MentorSessionInSchema(Schema):
     session_time: time
