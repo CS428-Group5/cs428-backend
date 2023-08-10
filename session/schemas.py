@@ -24,6 +24,8 @@ class MentorSessionInSchema(Schema):
 
 class MentorSessionOutSchema(ModelSchema):
     mentor_id: int = Field(..., alias="mentor.id")
+    mentor_first_name: str = Field(...,alias="mentor.user.first_name")
+    mentor_last_name: str = Field(...,alias="mentor.user.last_name")
     class Config:
         model = MentorSession
         model_exclude = ["mentor"]
