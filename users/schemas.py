@@ -114,7 +114,9 @@ class UserUpdateSchema(Schema):
 
 class PurchaseHistoryOutSchema(ModelSchema):
     mentee_id: int = Field(alias="mentee.id")
+    mentee_user_id: int = Field(..., alias="mentee.user.id")
     mentor_id: int = Field(alias="mentor_session.mentor.id")
+    mentor_user_id: int = Field(..., alias="mentor_session.mentor.user.id")
     session_date: date  = Field(...,alias="mentor_session.session_date")
     session_time: time = Field(...,alias="mentor_session.session_time")
     session_price: float | None = Field(...,alias="mentor_session.session_price")
