@@ -41,7 +41,7 @@ def add_mentor_session(request, body: MentorSessionInSchema):
         mentor_id=mentor.id,
         session_time=body.session_time,
         session_date=body.session_date,
-        session_price = mentor.default_session_price,
+        session_price=mentor.default_session_price,
         is_book=False,
     )
     return JsonResponse({"success": True}, status=200)
@@ -53,7 +53,7 @@ def add_mentor_session(request, body: MentorSessionInSchema):
 def get_mentor_session(request, mentor_id: int):
     mentor_sessions = filter(
         lambda mentor_session: not mentor_session.is_book,
-        MentorSession.objects.filter(mentor_id=mentor_id)
+        MentorSession.objects.filter(mentor_id=mentor_id),
     )
     return list(mentor_sessions)
 
@@ -77,49 +77,15 @@ def delete_mentor_session(request, mentor_session_id: int):
 def add_booked_session(request, mentor_session_id: int):
     mentor_session = get_object_or_404(MentorSession, id=mentor_session_id)
     mentee = get_object_or_404(Mentee, user_id=request.auth)
-    
-    # mentor = get_object_or_404(Mentor, id=mentor_session.mentor.id)    
-    # session_id = request.GET.get("session_id", None)
-    # if session_id is None:
-    #     return HttpResponseRedirect(f"/api/google-oauth2/oauth2callback")
-    
-    # session = Session.objects.get(session_key=session_id)
-    # request.session.update(session.get_decoded())
-    # credentials = json.loads(request.session['credentials'])
 
-    # if credentials['expires_in'] <= 0:
-    #     return HttpResponseRedirect(f"/api/google-oauth2/oauth2callback")
-    # else:
-    #     if mentor_session.is_book:
-    #         return JsonResponse({"error": "The session has been already booked"}, status=403)
-        
-    #     start_date_time = datetime.strptime(
-    #         str(mentor_session.session_date) + " " + str(mentor_session.session_time),
-    #         '%Y-%m-%d %H:%M:%S'
-    #     )
-    #     end_date_time = start_date_time + timedelta(minutes=30)
-    #     response = create_calendar(
-    #             credentials=credentials,
-    #             start_date_time=start_date_time.strftime('%Y-%m-%dT%H:%M:%S.000+07:00'),
-    #             end_date_time=end_date_time.strftime('%Y-%m-%dT%H:%M:%S.000+07:00'),
-    #             mentee_email=mentee.user.email,
-    #             mentor_email=mentor.user.email
-    #         )
-    #     if "error" in response:
-    #         if response["error"]["status"] == "UNAUTHENTICATED":
-    #             del request.session['credentials']
-    #             return HttpResponseRedirect(f"/api/google-oauth2/oauth2callback")
-            
     mentor_session.is_book = True
     mentor_session.save()
     BookedSession.objects.create(
-            mentee_id=mentee.id,
-            mentor_session_id=mentor_session.id,
-            # event_id=None,
-            # event_link=None,
-            booked_date = datetime.now().strftime('%Y-%m-%d'),
-            cancelled_by=0
-        )
+        mentee_id=mentee.id,
+        mentor_session_id=mentor_session.id,
+        booked_date=datetime.now().strftime("%Y-%m-%d"),
+        cancelled_by=0,
+    )
     return JsonResponse({"success": True}, status=200)
 
 
@@ -161,23 +127,10 @@ def cancel_booked_session(request, booked_session_id: int):
     mentor_session.save()
     return JsonResponse({"success": True}, status=200)
 
-    # if 'credentials' not in request.session:
-    #     return HttpResponseRedirect("/api/google-oauth2/oauth2callback")
-    
-    # credentials = json.loads(request.session['credentials'])
-    # if credentials['expires_in'] <= 0:
-    #     return HttpResponseRedirect("/api/google-oauth2/oauth2callback")
-    # else:
-    #     response = cancel_calendar(credentials, booked_session.event_id)
-    #     if "error" in response:
-    #         if "status" in response["error"]:
-    #             if response["error"]["status"] == "UNAUTHENTICATED":
-    #                 del request.session['credentials']
-    #                 return HttpResponseRedirect("/api/google-oauth2/oauth2callback")
-    #         raise ValueError(response)
-    #     return JsonResponse({"success": True}, status=200)
 
-@session_router.get("/booked_session/{booked_session_id}/meeting_link", auth=auth_bearer)
+@session_router.get(
+    "/booked_session/{booked_session_id}/meeting_link", auth=auth_bearer
+)
 def get_booked_session_meeting(request, booked_session_id: int):
     user = get_object_or_404(User, id=request.auth)
     booked_session = get_object_or_404(BookedSession, id=booked_session_id)
@@ -187,7 +140,7 @@ def get_booked_session_meeting(request, booked_session_id: int):
     else:
         if booked_session.mentee.user.id != user.id:
             raise KeyError("User and BookedSession don't match with each other")
-    
+
     meeting_url = (
         "http://localhost:8000/meeting?"
         f"session_id={booked_session.id}&"

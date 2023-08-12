@@ -97,12 +97,12 @@ def get_favorite(request):
     return favorites
 
 
-@mentor_router.post("/favorite")
+@mentor_router.post("/favorite", auth=auth_bearer)
 def add_favorite(request, body: FavoriteInSchema):
-    mentee_id = 1  # TODO: get from authentication data
+    user_id = request.auth
     mentor_id = body.mentor_id
 
-    mentee = get_object_or_404(Mentee, id=mentee_id)
+    mentee = get_object_or_404(Mentee, user__id=user_id)
     mentor = get_object_or_404(Mentor, id=mentor_id)
 
     mentee.favorites.add(mentor)
@@ -190,9 +190,11 @@ def update_user_information(request, id: int, body: UserUpdateSchema):
     user.save()
     return JsonResponse({"success": True}, status=200)
 
-@user_router.get("/purchase-history/", auth=auth_bearer, response=List[PurchaseHistoryOutSchema])
+
+@user_router.get(
+    "/purchase-history/", auth=auth_bearer, response=List[PurchaseHistoryOutSchema]
+)
 def get_purchase_history(request):
-    print(request.auth)
     user = get_object_or_404(User, id=request.auth)
     if user.is_mentor:
         mentor = get_object_or_404(Mentor, user=user)
@@ -209,6 +211,7 @@ def get_purchase_history(request):
     else:
         mentee = get_object_or_404(Mentee, user=user)
         return BookedSession.objects.filter(mentee=mentee)
+
 
 """
 Expertises API
