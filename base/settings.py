@@ -98,7 +98,7 @@ elif env == 'cloud':
         "NAME": "mentoree",  # database name
         "USER": "ecomerce",
         "PASSWORD": "1234",
-        "HOST": "localhost",
+        "HOST": "35.240.172.106",
         "PORT": "49153",
     }
 }

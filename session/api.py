@@ -142,7 +142,7 @@ def get_booked_session_meeting(request, booked_session_id: int):
             raise KeyError("User and BookedSession don't match with each other")
 
     meeting_url = (
-        "http://localhost:8000/meeting?"
+        "http://35.240.172.106:8000/meeting?"
         f"session_id={booked_session.id}&"
         f"""full_name={user.first_name + " " + user.last_name}&"""
         f"user_id={user.id}"
