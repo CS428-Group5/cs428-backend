@@ -1,14 +1,13 @@
 #!/bin/bash
 
-sudo apt-get --update -y 
-sudo apt-get -y install docker
+sudo snap install docker
 
 IMAGE=gcr.io/ecomercebackend-393408/cs428-backend:latest
 
 sudo gcloud auth print-access-token | sudo docker login -u oauth2accesstoken \
-  --password-stdin  https://us-central1-a-docker.pkg.dev
+  --password-stdin  https://gcr.io
 
-sudo gcloud auth configure-docker https://us-central1-a-docker.pkg.dev
+sudo gcloud auth configure-docker https://gcr.io
 sudo docker pull $IMAGE
 
 CONTAINER_ID=$(sudo docker ps -qf "name=backend")
@@ -19,7 +18,7 @@ fi
 
 POSTGRES_CONTAINER_ID=$(sudo docker ps -qf "name=mentoree-db")
 if [ -z "$POSTGRES_CONTAINER_ID" ]; then
-  docker run -dit --name mentoree-db -e POSTGRES_DB=mentoree -e POSTGRES_USER=ecomerce -e POSTGRES_PASSWORD=1234 -p 49153:5432 postgres:latest
+  sudo docker run -dit --name mentoree-db -e POSTGRES_DB=mentoree -e POSTGRES_USER=ecomerce -e POSTGRES_PASSWORD=1234 -p 49153:5432 postgres:latest
 fi
 
 sudo docker run -d -p 8000:8000 --name backend $IMAGE
