@@ -12,7 +12,7 @@ steps:
 - name: 'gcr.io/cloud-builders/gcloud'
   args: ['compute', 'scp', '--zone', 'asia-southeast1-b', 'remote_startup.sh',  'ecom-1:/home/quocthogminhqtm/']
 - name: 'gcr.io/cloud-builders/gcloud'
-  args: ['compute', 'ssh', 'ecom-1', '--zone', 'asia-southeast1-b', '--command', 'bash /home/quocthogminhqtm/init_script.sh']
+  args: ['compute', 'ssh', 'ecom-1', '--zone', 'asia-southeast1-b', '--command', 'bash /home/quocthogminhqtm/remote_startup.sh']
 options:
   logging: GCS_ONLY
   env: 
