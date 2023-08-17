@@ -82,14 +82,26 @@ WSGI_APPLICATION = "base.wsgi.application"
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
+env = os.environ.get("DJANGO_ENV", 'local')
 
-DATABASES = {
+if env == 'local':
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": "db.sqlite3",
+        }
+    }
+elif env == 'cloud':
+    DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": "db.sqlite3",
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": "mentoree",  # database name
+        "USER": "ecomerce",
+        "PASSWORD": "1234",
+        "HOST": "localhost",
+        "PORT": "49153",
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators

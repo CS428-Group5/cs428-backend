@@ -20,6 +20,7 @@ RUN pip install -r requirements.txt
 RUN python manage.py migrate
 
 ENV VNPAY_RETURN_URL_HOST="https://mentoree-cs428.netlify.app"
+ENV DJANGO_ENV="cloud"
 
 EXPOSE 8000
 CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
