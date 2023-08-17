@@ -3,6 +3,7 @@ from django.shortcuts import get_object_or_404
 from django.http import JsonResponse, HttpResponseRedirect
 from django.db import transaction
 from django.contrib.sessions.models import Session
+from base.settings import cur_deployed_host
 
 from session.models import MentorSession, BookedSession
 from authentication.helpers import auth_bearer
@@ -142,7 +143,7 @@ def get_booked_session_meeting(request, booked_session_id: int):
             raise KeyError("User and BookedSession don't match with each other")
 
     meeting_url = (
-        "http://35.240.172.106:8000/meeting?"
+        f"http://{cur_deployed_host}:8000/meeting?"
         f"session_id={booked_session.id}&"
         f"""full_name={user.first_name + " " + user.last_name}&"""
         f"user_id={user.id}"
