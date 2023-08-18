@@ -30,7 +30,7 @@ env = os.environ.get("DJANGO_ENV", 'local')
 if env == 'local':
     cur_deployed_host = "localhost"
 else:
-    cur_deployed_host = "35.240.172.106"
+    cur_deployed_host = "35.198.226.56"
 ALLOWED_HOSTS = [cur_deployed_host, "127.0.0.1"]
 
 
