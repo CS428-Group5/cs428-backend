@@ -3,7 +3,7 @@ from django.shortcuts import get_object_or_404
 from django.http import JsonResponse, HttpResponseRedirect
 from django.db import transaction
 from django.contrib.sessions.models import Session
-from base.settings import cur_deployed_host
+from base.settings import cur_deployed_host, MEETING_RETURN_URL_HOST
 
 from session.models import MentorSession, BookedSession
 from authentication.helpers import auth_bearer
@@ -146,6 +146,7 @@ def get_booked_session_meeting(request, booked_session_id: int):
         f"http://{cur_deployed_host}:8000/meeting?"
         f"session_id={booked_session.id}&"
         f"""full_name={user.first_name + " " + user.last_name}&"""
-        f"user_id={user.id}"
+        f"user_id={user.id}&"
+        f"redirect_url={MEETING_RETURN_URL_HOST}"
     )
     return JsonResponse({"meeting_url": meeting_url}, status=200)

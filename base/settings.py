@@ -26,8 +26,12 @@ SECRET_KEY = "django-insecure-2md5!(o5pj@e!%nafp3i!9wv5idg_bge6#$kodjsw4zsy17os3
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-cur_deployed_host = "35.240.172.106"
-ALLOWED_HOSTS = [cur_deployed_host, "localhost", "127.0.0.1"]
+env = os.environ.get("DJANGO_ENV", 'local')
+if env == 'local':
+    cur_deployed_host = "localhost"
+else:
+    cur_deployed_host = "35.240.172.106"
+ALLOWED_HOSTS = [cur_deployed_host, "127.0.0.1"]
 
 
 # Application definition
@@ -83,8 +87,7 @@ WSGI_APPLICATION = "base.wsgi.application"
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
-env = os.environ.get("DJANGO_ENV", 'local')
-
+MEETING_RETURN_URL_HOST = os.environ.get("MEETING_RETURN_URL_HOST", 'http://localhost:5173')
 if env == 'local':
     DATABASES = {
         "default": {

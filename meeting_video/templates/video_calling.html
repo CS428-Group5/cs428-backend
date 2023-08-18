@@ -35,6 +35,7 @@ window.onload = function () {
     const userName = "{{full_name}}";
     const appID = 572360886;
     const serverSecret = "01a451443850afaa55e57b250e11b50f";
+    const redirect_url = getUrlParams(window.location.href)['redirect_url'];
     const kitToken = ZegoUIKitPrebuilt.generateKitTokenForTest(appID, serverSecret, roomID, userID, userName);
 
     
@@ -49,7 +50,7 @@ window.onload = function () {
                 mode: ZegoUIKitPrebuilt.VideoConference,
             },
             onLeaveRoom: () => {
-                window.location.href = "http://mentoree-cs428.netlify.app/" 
+                window.location.href = redirect_url
             },
            	turnOnMicrophoneWhenJoining: true,
            	turnOnCameraWhenJoining: true,
